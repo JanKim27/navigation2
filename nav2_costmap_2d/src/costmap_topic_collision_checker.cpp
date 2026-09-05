@@ -15,6 +15,7 @@
 // Modified by: Shivang Patel (shivaan14@gmail.com)
 
 #include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -80,6 +81,7 @@ double CostmapTopicCollisionChecker::scorePose(
   const geometry_msgs::msg::Pose2D & pose,
   bool fetch_costmap_and_footprint)
 {
+  std::lock_guard<std::mutex> score_lock(score_mutex_);
   if (fetch_costmap_and_footprint) {
     try {
       collision_checker_.setCostmap(costmap_sub_.getCostmap());
