@@ -23,6 +23,7 @@
 #include "nav2_amcl/amcl_node.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <memory>
 #include <string>
 #include <utility>
@@ -1300,7 +1301,13 @@ AmclNode::dynamicParametersCallback(
         z_max_ = parameter.as_double();
         reinit_laser = true;
       } else if (param_name == "z_rand") {
-        z_rand_ = parameter.as_double();
+        const double value = parameter.as_double();
+        if (!std::isfinite(value)) {
+          result.successful = false;
+          result.reason = "z_rand must be finite";
+          return result;
+        }
+        z_rand_ = value;
         reinit_laser = true;
       } else if (param_name == "z_short") {
         z_short_ = parameter.as_double();
