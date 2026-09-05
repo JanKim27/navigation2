@@ -136,6 +136,9 @@ nav_msgs::msg::Path NavfnPlanner::createPlan(
   const geometry_msgs::msg::PoseStamped & goal,
   std::function<bool()> cancel_checker)
 {
+  std::unique_lock<nav2_costmap_2d::Costmap2D::mutex_t> lock(
+    *(costmap_->getMutex()));
+
 #ifdef BENCHMARK_TESTING
   steady_clock::time_point a = steady_clock::now();
 #endif
